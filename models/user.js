@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose');
 const Joi = require('joi');
 const gravatar = require('gravatar');
 const { v4 } = require('uuid');
-const schema = new Schema(
+const userSchema = new Schema(
   {  name: {
     type: String,
     required: [true, 'Name is required'],
@@ -16,11 +16,6 @@ const schema = new Schema(
       required: [true, 'Email is required'],
       unique: true,
     },
-    // subscription: {
-    //   type: String,
-    //   enum: ['starter', 'pro', 'business'],
-    //   default: 'starter',
-    // },
     token: {
       type: String,
       default: null,
@@ -31,7 +26,7 @@ const schema = new Schema(
         return gravatar.url(this.email, {}, true);
       },
     },
-    verify: {
+    isVerified: {
       type: Boolean,
       default: false,
     },
@@ -45,9 +40,10 @@ const schema = new Schema(
   { timestamps: true }
 );
 
-const User = model('user', schema);
+const User = model('user', userSchema);
 
 const schemaRegister = Joi.object({
+  name: Joi.string().required(),
   email: Joi.string()
     .email({
       minDomainSegments: 2,
@@ -55,7 +51,6 @@ const schemaRegister = Joi.object({
     })
     .required(),
   password: Joi.string().required(),
-  role: Joi.string(),
 });
 
 const schemaLogin = Joi.object({
@@ -78,14 +73,9 @@ const schemaVerify = Joi.object({
   password: Joi.string().required(),
 });
 
-// const schemaSubscription = Joi.object({
-//   subscription: Joi.string().valid('starter', 'pro', 'business').required(),
-// });
-
 module.exports = {
   User,
   schemaRegister,
   schemaLogin,
-  // schemaSubscription,
   schemaVerify,
 };

@@ -5,12 +5,11 @@ const {
   getResumeById,
   addResume,
   editResume,
-  // editContactFavorite,
   deleteResume,
 } = require('../../controllers/resume');
 const router = express.Router();
 
-router.get('/', getResumeTemplate);
+// router.get('/', getResumeTemplate);
 router.get('/:userId', auth, validateId, getResumeById);
 router.post('/', auth, addResume);
 router.put('/:userId', auth, validateId, editResume);

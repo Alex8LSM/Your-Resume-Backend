@@ -1,20 +1,20 @@
-const { contactService } = require('../services');
-const { schema } = require('../models/resume');
+const { userDataService } = require('../services');
+const { resume } = require('../models/resume');
 const { createError } = require('../helpers/errors');
 
-const getContacts = async (req, res, next) => {
-  try {
-    const all = await contactService.listContacts(req.user._id, req.query);
-    res.json(all);
-  } catch (e) {
-    next(e);
-  }
-};
+// const getResumeTemplate = async (req, res, next) => {
+//   try {
+//     const all = await userDataService.getTemplate(req.user._id, req.query);
+//     res.json(all);
+//   } catch (e) {
+//     next(e);
+//   }
+// };
 
-const getContactById = async (req, res, next) => {
+const getResumeById = async (req, res, next) => {
   try {
     const { contactId } = req.params;
-    const contact = await contactService.getContactById(contactId);
+    const contact = await userDataService.getResumeById(contactId);
     if (!contact) {
       throw createError(404, 'Not found');
     } else {
@@ -25,7 +25,7 @@ const getContactById = async (req, res, next) => {
   }
 };
 
-const addContact = async (req, res, next) => {
+const addResume = async (req, res, next) => {
   try {
     const body = req.body;
     const id = req.user._id;
@@ -37,12 +37,12 @@ const addContact = async (req, res, next) => {
     } else if (!body.phone) {
       throw createError(400, `missing required phone field`);
     } else {
-      const { error } = schema.validate(body);
+      const { error } = resume.validate(body);
       if (error) {
         console.log(error);
         throw createError(400, error.message);
       }
-      const contact = await contactService.addContact(body, id);
+      const contact = await userDataService.addResume(body, id);
       res.status(201).json(contact);
     }
   } catch (e) {
@@ -50,17 +50,17 @@ const addContact = async (req, res, next) => {
   }
 };
 
-const editContact = async (req, res, next) => {
+const editResume = async (req, res, next) => {
   try {
     const { contactId } = req.params;
     const body = req.body;
-    const contact = await contactService.updateContact(contactId, body);
+    const contact = await userDataService.updateContact(contactId, body);
     if (Object.keys(body).length === 0) {
       throw createError(400, 'missing fields');
     } else if (!contact) {
       throw createError(404, 'Not found');
     } else {
-      const { error } = schema.validate(body);
+      const { error } = resume.validate(body);
       if (error) {
         throw createError(400, error.message);
       }
@@ -71,14 +71,14 @@ const editContact = async (req, res, next) => {
   }
 };
 
-const editContactFavorite = async (req, res, next) => {
+const editResumeFavorite = async (req, res, next) => {
   try {
     const body = req.body;
     if (body.favorite === undefined) {
       throw createError(400, 'missing field favorite');
     } else {
       const { contactId } = req.params;
-      const contact = await contactService.updateStatusContact(contactId, body);
+      const contact = await userDataService.updateStatusContact(contactId, body);
       if (!contact) {
         throw createError(404, 'Not found');
       } else {
@@ -89,10 +89,10 @@ const editContactFavorite = async (req, res, next) => {
     next(e);
   }
 };
-const deleteContact = async (req, res, next) => {
+const deleteResume = async (req, res, next) => {
   try {
     const { contactId } = req.params;
-    const contact = await contactService.removeContact(contactId);
+    const contact = await userDataService.removeContact(contactId);
     if (!contact) {
       throw createError(404, 'Not found');
     } else {
@@ -104,10 +104,9 @@ const deleteContact = async (req, res, next) => {
 };
 
 module.exports = {
-  getContacts,
-  getContactById,
-  addContact,
-  editContact,
-  editContactFavorite,
-  deleteContact,
+  // getResumeTemplate,
+  getResumeById,
+  addResume,
+  editResume,
+  deleteResume,
 };

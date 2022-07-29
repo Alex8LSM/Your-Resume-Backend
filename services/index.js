@@ -1,9 +1,9 @@
-const contactService = require('./userData.service');
+const userDataService = require('./userData.service');
 const userService = require('./user.service');
 const imageService = require('./image.service');
 const emailService = require('./email.service');
 module.exports = {
-  contactService,
+  userDataService,
   userService,
   imageService,
   emailService,

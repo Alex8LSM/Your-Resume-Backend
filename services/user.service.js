@@ -34,7 +34,6 @@ const loginUser = async ({ email, password }) => {
   }
   const payload = {
     id: user._id,
-    role: user.role,
   };
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
   await User.findByIdAndUpdate(user._id, { token });
@@ -60,15 +59,6 @@ const authenticateUser = async (token) => {
   }
 };
 
-const updateUserSubscription = async (id, subscription) => {
-  const user = await User.findById(id);
-  if (!user) {
-    throw createError(401, 'Not authorized');
-  } else {
-    await User.findByIdAndUpdate(id, { subscription: subscription });
-    return await User.findById(id, '-_id email subscription');
-  }
-};
 const updateUser = async (id, data) => {
   return User.findByIdAndUpdate(id, data, { new: true });
 };
@@ -81,7 +71,6 @@ module.exports = {
   loginUser,
   authenticateUser,
   logoutUser,
-  updateUserSubscription,
   updateUser,
   findUser,
 };

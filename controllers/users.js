@@ -26,7 +26,7 @@ const confirm = async (req, res, next) => {
     }
 
     await userService.updateUser(user._id, {
-      verify: true,
+      isVerified: true,
       verificationToken: null,
     });
     return res.status(200).json({
@@ -49,7 +49,7 @@ const resend = async (req, res, next) => {
       throw createError(404, 'User was not found');
     }
 
-    if (user.verify) {
+    if (user.isVerified) {
       throw createError(400, 'Verification has already been passed');
     }
     await emailService.sendEmail(user.email, user.verificationToken);
@@ -66,10 +66,10 @@ const loginUser = async (req, res, next) => {
   try {
     const user = await userService.loginUser(req.body);
     res.json({
-      token: user.token,
       user: {
+        name: user.name,
         email: user.email,
-        subscription: user.subscription,
+        token: user.token,
       },
     });
   } catch (e) {
