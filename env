@@ -1,5 +1,0 @@
-PORT=3000
-DB_HOST=mongodb+srv://Alex:NodeJS@nodejshw.iozou9l.mongodb.net/db-contacts?retryWrites=true&w=majority
-SECRET_KEY=MySecretKeyIsBest
-USER_EMAIL=alex8lsm@meta.ua
-USER_PASSWORD=AX1509ax1509
